@@ -1,0 +1,24 @@
+{
+	"name": "coreBOS/cbProcessFlow",
+	"type": "corebos-module",
+	"properties": {
+		"name": "BPM Process Flow Module",
+		"description": "This module is part of the BPM perspective and serves to define the module and field to control as well as the overall flow of the process.",
+		"keywords": ["bpm","process","flow"],
+		"homepage": "http://corebos.org/documentation/doku.php?id=en:extensions:extensions:cbprocessflow",
+		"version": "1.0",
+		"time": "2019-11-24",
+		"license": "Vizsage",
+		"extra": {
+			"distribution": "Free"
+		},
+		"authors": [
+					{
+					"name": "Spike Associates"
+					}
+		],
+		"support": {
+				"email": "info(at)tsolucio(dot)com"
+		}
+	}
+}
