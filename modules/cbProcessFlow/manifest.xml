@@ -376,13 +376,13 @@
 </relatedlist>
 <relatedlist>
 <function>get_dependents_list</function>
-<label>cbProcessStepAlert</label>
+<label>cbProcessAlert</label>
 <sequence>2</sequence>
 <presence>0</presence>
 <actions>
 <action>ADD</action>
 </actions>
-<relatedmodule>cbProcessStepAlert</relatedmodule>
+<relatedmodule>cbProcessAlert</relatedmodule>
 </relatedlist>
 <relatedlist>
 <function>get_dependents_list</function>
