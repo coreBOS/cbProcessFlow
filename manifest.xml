@@ -36,13 +36,13 @@
   `cbprocessflowid` int(11) NOT NULL,
   `cbprocessflow_no` varchar(65) default NULL,
   `processflowname` varchar(255) default NULL,
-  `module` varchar(155) DEFAULT NULL,
+  `pfmodule` varchar(155) DEFAULT NULL,
   `field` varchar(155) DEFAULT NULL,
   `active` varchar(3) DEFAULT NULL,
   `condition` int(11) DEFAULT NULL,
   `depgraph` int(11) DEFAULT NULL,
   PRIMARY KEY (`cbprocessflowid`),
-  INDEX(`module`,`active`)
+  INDEX(`pfmodule`,`active`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8]]></sql>
 </table>
 <table>
@@ -102,12 +102,12 @@
 </entityidentifier>
 </field>
 <field>
-<fieldname>module</fieldname>
+<fieldname>pfmodule</fieldname>
 <uitype>1613</uitype>
-<columnname>module</columnname>
+<columnname>pfmodule</columnname>
 <tablename>vtiger_cbprocessflow</tablename>
 <generatedtype>1</generatedtype>
-<fieldlabel>module</fieldlabel>
+<fieldlabel>pfmodule</fieldlabel>
 <readonly>1</readonly>
 <presence>0</presence>
 <selected>0</selected>
@@ -333,7 +333,7 @@
 <columnindex>1</columnindex>
 </field>
 <field>
-<fieldname>module</fieldname>
+<fieldname>pfmodule</fieldname>
 <columnindex>2</columnindex>
 </field>
 <field>

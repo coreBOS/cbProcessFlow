@@ -56,7 +56,7 @@ class cbProcessFlow extends CRMEntity {
 		// tablename should not have prefix 'vtiger_'
 		'cbprocessflow_no'=> array('cbprocessflow' => 'cbprocessflow_no'),
 		'processflowname' => array('cbprocessflow' => 'processflowname'),
-		'module' => array('cbprocessflow' => 'module'),
+		'pfmodule' => array('cbprocessflow' => 'pfmodule'),
 		'field' => array('cbprocessflow' => 'field'),
 		'active' => array('cbprocessflow' => 'active'),
 		'Assigned To' => array('crmentity' => 'smownerid')
@@ -65,7 +65,7 @@ class cbProcessFlow extends CRMEntity {
 		/* Format: Field Label => fieldname */
 		'cbprocessflow_no'=> 'cbprocessflow_no',
 		'processflowname' => 'processflowname',
-		'module' => 'module',
+		'pfmodule' => 'pfmodule',
 		'field' => 'field',
 		'active' => 'active',
 		'Assigned To' => 'assigned_user_id'
@@ -80,7 +80,7 @@ class cbProcessFlow extends CRMEntity {
 		// tablename should not have prefix 'vtiger_'
 		'cbprocessflow_no'=> array('cbprocessflow' => 'cbprocessflow_no'),
 		'processflowname' => array('cbprocessflow' => 'processflowname'),
-		'module' => array('cbprocessflow' => 'module'),
+		'pfmodule' => array('cbprocessflow' => 'pfmodule'),
 		'field' => array('cbprocessflow' => 'field'),
 		'active' => array('cbprocessflow' => 'active'),
 	);
@@ -88,7 +88,7 @@ class cbProcessFlow extends CRMEntity {
 		/* Format: Field Label => fieldname */
 		'cbprocessflow_no'=> 'cbprocessflow_no',
 		'processflowname' => 'processflowname',
-		'module' => 'module',
+		'pfmodule' => 'pfmodule',
 		'field' => 'field',
 		'active' => 'active',
 	);

@@ -19,7 +19,7 @@ $mod_strings = array(
 
 	'processflowname' => 'Nombre Flujo',
 	'cbprocessflow_no' => 'Nº Flujo',
-	'module' => 'Módulo',
+	'pfmodule' => 'Módulo',
 	'condition' => 'Condición',
 	'field' => 'Campo',
 	'depgraph' => 'Grafo Dependencias',
