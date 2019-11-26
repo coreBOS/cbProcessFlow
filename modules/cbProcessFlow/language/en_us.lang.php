@@ -20,8 +20,8 @@ $mod_strings = array(
 	'processflowname' => 'Flow Name',
 	'cbprocessflow_no' => 'Flow No',
 	'pfmodule' => 'Module',
-	'condition' => 'Condition',
-	'field' => 'Field',
+	'pfcondition' => 'Condition',
+	'pffield' => 'Field',
 	'depgraph' => 'Dependency Graph',
 	'active' => 'Active',
 );

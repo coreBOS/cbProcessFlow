@@ -37,9 +37,9 @@
   `cbprocessflow_no` varchar(65) default NULL,
   `processflowname` varchar(255) default NULL,
   `pfmodule` varchar(155) DEFAULT NULL,
-  `field` varchar(155) DEFAULT NULL,
+  `pffield` varchar(155) DEFAULT NULL,
   `active` varchar(3) DEFAULT NULL,
-  `condition` int(11) DEFAULT NULL,
+  `pfcondition` int(11) DEFAULT NULL,
   `depgraph` int(11) DEFAULT NULL,
   PRIMARY KEY (`cbprocessflowid`),
   INDEX(`pfmodule`,`active`)
@@ -122,12 +122,12 @@
 <masseditable>0</masseditable>
 </field>
 <field>
-<fieldname>condition</fieldname>
+<fieldname>pfcondition</fieldname>
 <uitype>10</uitype>
-<columnname>condition</columnname>
+<columnname>pfcondition</columnname>
 <tablename>vtiger_cbprocessflow</tablename>
 <generatedtype>1</generatedtype>
-<fieldlabel>condition</fieldlabel>
+<fieldlabel>pfcondition</fieldlabel>
 <readonly>1</readonly>
 <presence>0</presence>
 <selected>0</selected>
@@ -145,12 +145,12 @@
 </relatedmodules>
 </field>
 <field>
-<fieldname>field</fieldname>
+<fieldname>pffield</fieldname>
 <uitype>1</uitype>
-<columnname>field</columnname>
+<columnname>pffield</columnname>
 <tablename>vtiger_cbprocessflow</tablename>
 <generatedtype>1</generatedtype>
-<fieldlabel>field</fieldlabel>
+<fieldlabel>pffield</fieldlabel>
 <readonly>1</readonly>
 <presence>0</presence>
 <selected>0</selected>
@@ -337,7 +337,7 @@
 <columnindex>2</columnindex>
 </field>
 <field>
-<fieldname>field</fieldname>
+<fieldname>pffield</fieldname>
 <columnindex>3</columnindex>
 </field>
 <field>
