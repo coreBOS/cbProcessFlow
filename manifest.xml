@@ -40,7 +40,6 @@
   `pffield` varchar(155) DEFAULT NULL,
   `active` varchar(3) DEFAULT NULL,
   `pfcondition` int(11) DEFAULT NULL,
-  `depgraph` int(11) DEFAULT NULL,
   PRIMARY KEY (`cbprocessflowid`),
   INDEX(`pfmodule`,`active`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8]]></sql>
@@ -75,7 +74,7 @@
 <displaytype>1</displaytype>
 <info_type>BAS</info_type>
 <helpinfo><![CDATA[]]></helpinfo>
-<masseditable>0</masseditable>
+<masseditable>1</masseditable>
 </field>
 <field>
 <fieldname>cbprocessflow_no</fieldname>
@@ -119,7 +118,7 @@
 <displaytype>1</displaytype>
 <info_type>BAS</info_type>
 <helpinfo><![CDATA[]]></helpinfo>
-<masseditable>0</masseditable>
+<masseditable>1</masseditable>
 </field>
 <field>
 <fieldname>pfcondition</fieldname>
@@ -139,7 +138,7 @@
 <displaytype>1</displaytype>
 <info_type>BAS</info_type>
 <helpinfo><![CDATA[]]></helpinfo>
-<masseditable>0</masseditable>
+<masseditable>1</masseditable>
 <relatedmodules>
 <relatedmodule>cbMap</relatedmodule>
 </relatedmodules>
@@ -162,30 +161,27 @@
 <displaytype>1</displaytype>
 <info_type>BAS</info_type>
 <helpinfo><![CDATA[]]></helpinfo>
-<masseditable>0</masseditable>
+<masseditable>1</masseditable>
 </field>
 <field>
-<fieldname>depgraph</fieldname>
-<uitype>10</uitype>
-<columnname>depgraph</columnname>
-<tablename>vtiger_cbprocessflow</tablename>
+<fieldname>assigned_user_id</fieldname>
+<uitype>53</uitype>
+<columnname>smownerid</columnname>
+<tablename>vtiger_crmentity</tablename>
 <generatedtype>1</generatedtype>
-<fieldlabel>depgraph</fieldlabel>
+<fieldlabel>Assigned To</fieldlabel>
 <readonly>1</readonly>
 <presence>0</presence>
 <selected>0</selected>
 <sequence>6</sequence>
 <maximumlength>100</maximumlength>
-<typeofdata>V~O</typeofdata>
-<quickcreate>0</quickcreate>
-<quickcreatesequence>0</quickcreatesequence>
+<typeofdata>V~M</typeofdata>
+<quickcreate>1</quickcreate>
+<quickcreatesequence>1</quickcreatesequence>
 <displaytype>1</displaytype>
 <info_type>BAS</info_type>
 <helpinfo><![CDATA[]]></helpinfo>
-<masseditable>0</masseditable>
-<relatedmodules>
-<relatedmodule>cbMap</relatedmodule>
-</relatedmodules>
+<masseditable>1</masseditable>
 </field>
 <field>
 <fieldname>active</fieldname>
@@ -205,26 +201,6 @@
 <displaytype>1</displaytype>
 <info_type>BAS</info_type>
 <helpinfo><![CDATA[]]></helpinfo>
-<masseditable>0</masseditable>
-</field>
-<field>
-<fieldname>assigned_user_id</fieldname>
-<uitype>53</uitype>
-<columnname>smownerid</columnname>
-<tablename>vtiger_crmentity</tablename>
-<generatedtype>1</generatedtype>
-<fieldlabel>Assigned To</fieldlabel>
-<readonly>1</readonly>
-<presence>0</presence>
-<selected>0</selected>
-<sequence>8</sequence>
-<maximumlength>100</maximumlength>
-<typeofdata>V~M</typeofdata>
-<quickcreate>1</quickcreate>
-<quickcreatesequence>1</quickcreatesequence>
-<displaytype>1</displaytype>
-<info_type>BAS</info_type>
-<helpinfo><![CDATA[]]></helpinfo>
 <masseditable>1</masseditable>
 </field>
 <field>
@@ -237,7 +213,7 @@
 <readonly>1</readonly>
 <presence>0</presence>
 <selected>0</selected>
-<sequence>9</sequence>
+<sequence>8</sequence>
 <maximumlength>100</maximumlength>
 <typeofdata>V~O</typeofdata>
 <quickcreate>3</quickcreate>
@@ -257,7 +233,7 @@
 <readonly>1</readonly>
 <presence>0</presence>
 <selected>0</selected>
-<sequence>10</sequence>
+<sequence>9</sequence>
 <maximumlength>100</maximumlength>
 <typeofdata>DT~O</typeofdata>
 <quickcreate>3</quickcreate>
@@ -277,7 +253,7 @@
 <readonly>1</readonly>
 <presence>0</presence>
 <selected>0</selected>
-<sequence>11</sequence>
+<sequence>10</sequence>
 <maximumlength>100</maximumlength>
 <typeofdata>DT~O</typeofdata>
 <quickcreate>3</quickcreate>

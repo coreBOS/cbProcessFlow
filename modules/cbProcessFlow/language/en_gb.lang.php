@@ -22,7 +22,6 @@ $mod_strings = array(
 	'pfmodule' => 'Module',
 	'pfcondition' => 'Condition',
 	'pffield' => 'Field',
-	'depgraph' => 'Dependency Graph',
 	'active' => 'Active',
 );
 ?>
