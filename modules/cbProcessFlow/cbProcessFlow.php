@@ -9,6 +9,7 @@
  ************************************************************************************/
 require_once 'data/CRMEntity.php';
 require_once 'data/Tracker.php';
+require_once 'modules/BusinessActions/BusinessActions.php';
 
 class cbProcessFlow extends CRMEntity {
 	public $db;
@@ -121,6 +122,20 @@ class cbProcessFlow extends CRMEntity {
 		if ($this->HasDirectImageField) {
 			$this->insertIntoAttachment($this->id, $module);
 		}
+		$tabid = getTabid($this->column_fields['pfmodule']);
+		$moduleInstance = Vtiger_Module::getInstance($tabid);
+		BusinessActions::addLink(
+			$tabid,
+			'DETAILVIEWWIDGET',
+			'Push Along Flow',
+			'module=cbProcessFlow&action=cbProcessFlowAjax&file=pushAlongFlow&id=$RECORD$',
+			'',
+			'',
+			'',
+			true,
+			0
+		);
+		$moduleInstance->addLink('HEADERSCRIPT', 'Push Along Flow', 'modules/cbProcessFlow/mermaid.min.js', '', 0, '', true);
 	}
 
 	/**
@@ -143,6 +158,43 @@ class cbProcessFlow extends CRMEntity {
 		} elseif ($event_type == 'module.postupdate') {
 			// TODO Handle actions after this module is updated.
 		}
+	}
+
+	public static function getDestinationStatesArray($processflow, $fromstate) {
+		global $adb;
+		$rs = $adb->pquery(
+			'select tostep, pfmodule
+			from vtiger_cbprocessstep
+			inner join vtiger_crmentity on crmid=cbprocessstepid
+			inner join vtiger_cbprocessflow on processflow=cbprocessflowid
+			where deleted=0 and processflow=? and fromstep=?',
+			array($processflow, $fromstate)
+		);
+		$states=array();
+		while ($st = $adb->fetch_array($rs)) {
+			$states[$st['tostep']] = getTranslatedString($st['tostep'], $st['pfmodule']);
+		}
+		return $states;
+	}
+
+	public static function getDestinationStatesGraph($processflow, $fromstate, $record, $askifsure) {
+		global $adb;
+		$rs = $adb->pquery('select pfmodule from vtiger_cbprocessflow where cbprocessflowid=?', array($processflow));
+		$module = $adb->query_result($rs, 0, 0);
+		$states = self::getDestinationStatesArray($processflow, $fromstate);
+		if (empty($states)) {
+			return '';
+		}
+		$askifsure = empty($askifsure) ? 'false' : 'true';
+		$graph = "graph LR\n";
+		$from = "A(".getTranslatedString($fromstate, $module).') --> ';
+		$letters = range('B', 'Z');
+		foreach ($states as $state => $to) {
+			$letter = next($letters);
+			$graph .= $from.$letter.'('.$to.")\n";
+			$graph .= "click $letter \"javascript:processflowmoveto('$state', $record, $askifsure)\"\n";
+		}
+		return $graph;
 	}
 
 	/**
