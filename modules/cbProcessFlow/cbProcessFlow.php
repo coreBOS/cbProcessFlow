@@ -10,6 +10,7 @@
 require_once 'data/CRMEntity.php';
 require_once 'data/Tracker.php';
 require_once 'modules/BusinessActions/BusinessActions.php';
+include_once 'include/Webservices/upsert.php';
 
 class cbProcessFlow extends CRMEntity {
 	public $db;
@@ -119,6 +120,7 @@ class cbProcessFlow extends CRMEntity {
 	public $mandatory_fields = array('createdtime', 'modifiedtime', 'cbprocessflow_no');
 
 	public function save_module($module) {
+		global $current_user;
 		if ($this->HasDirectImageField) {
 			$this->insertIntoAttachment($this->id, $module);
 		}
@@ -136,6 +138,36 @@ class cbProcessFlow extends CRMEntity {
 			0
 		);
 		$moduleInstance->addLink('HEADERSCRIPT', 'Push Along Flow', 'modules/cbProcessFlow/mermaid.min.js', '', 0, '', true);
+		/////////
+		$rec = array(
+			'mapname' => 'ProcessFlowFor'.$this->column_fields['pfmodule'].$this->column_fields['pffield'].'_Validations',
+			'maptype' => 'Validations',
+			'targetname' => $this->column_fields['pfmodule'],
+			'description' => '',
+			'assigned_user_id' => vtws_getEntityId('Users').'x'.$current_user->id,
+		);
+		$rec['content'] = '<map>
+<originmodule>
+	<originname>'.$this->column_fields['pfmodule'].'</originname>
+</originmodule>
+<fields>
+	<field>
+	<fieldname>'.$this->column_fields['pffield'].'</fieldname>
+	<validations>
+		<validation>
+		<rule>custom</rule>
+		<restrictions>
+		<restriction>modules/cbProcessFlow/validateFlowStep.php</restriction>
+		<restriction>validateFlowStep</restriction>
+		<restriction>validateFlowStep</restriction>
+		</restrictions>
+		<message>Invalid flow transition for {field}</message>
+		</validation>
+	</validations>
+	</field>
+</fields>
+</map>';
+		vtws_upsert('cbMap', $rec, 'mapname', $rec, $current_user);
 	}
 
 	/**
