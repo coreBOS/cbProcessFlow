@@ -168,6 +168,9 @@ class cbProcessFlow extends CRMEntity {
 </fields>
 </map>';
 		vtws_upsert('cbMap', $rec, 'mapname', $rec, $current_user);
+		$modplog = Vtiger_Module::getInstance('ProcessLog');
+		$field = Vtiger_Field::getInstance('relatedflow', $modplog);
+		$field->setRelatedModules(array($this->column_fields['pfmodule']));
 	}
 
 	/**
