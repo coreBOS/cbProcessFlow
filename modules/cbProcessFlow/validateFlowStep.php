@@ -26,15 +26,35 @@ function validateFlowStep($fieldname, $fieldvalue, $params, $entity) {
 		array($moduleName, '1')
 	);
 	if ($rs && $adb->num_rows($rs)>0) {
-		if ($entity['mode']=='') {
-			$crmid = 0;
-		} else {
-			$crmid = $entity['record'];
+		$pffield = $rs->fields['pffield'];
+		// $isNew = true;
+		$log->fatal($entity);
+		if (empty($entity['mode']) && empty($entity['record'])) {
+			$rss = $adb->pquery(
+				'SELECT 1
+				FROM `vtiger_cbprocessstep`
+				INNER JOIN vtiger_crmentity on crmid=cbprocessstepid
+				WHERE deleted=0 and `processflow`=? and fromstep=? and active=? and fromstep not in
+				(select distinct tostep
+				FROM `vtiger_cbprocessstep`
+				INNER JOIN vtiger_crmentity on crmid=cbprocessstepid
+				WHERE deleted=0 and `processflow`=? and active=?)',
+				array($rs->fields['cbprocessflowid'], $entity[$pffield], '1', $rs->fields['cbprocessflowid'], '1')
+			);
+			if ($rss && $adb->num_rows($rss)>0) {
+				return true;
+			} else {
+				// return invalid initial state and log the event
+				// there are no negative actions to launch because there is no transition step
+				return false;
+			}
 		}
-		$pffield = $adb->query_result($rs, 0, 'pffield');
-		if ($entity[$pffield]!=$entity['current_'.$pffield] || $entity['mode']=='') {
-			$pfcondition = $adb->query_result($rs, 0, 'pfcondition');
-			if (empty($pfcondition) || $entity['mode']=='' || coreBOS_Rule::evaluate($pfcondition, $entity)) {
+		// editing
+		$crmid = $entity['record'];
+		if ($entity[$pffield]!=$entity['current_'.$pffield]) {
+			$entity['record_id'] = $entity['record'];
+			$pfcondition = $rs->fields['pfcondition'];
+			if (empty($pfcondition) || coreBOS_Rule::evaluate($pfcondition, $entity)) {
 				$rss = $adb->pquery(
 					'select cbprocessstepid, validation
 					from vtiger_cbprocessstep
@@ -42,29 +62,33 @@ function validateFlowStep($fieldname, $fieldvalue, $params, $entity) {
 					where deleted=0 and processflow=? and fromstep=? and tostep=? and active=?',
 					array($rs->fields['cbprocessflowid'], $entity['current_'.$pffield], $entity[$pffield], '1')
 				);
-				if ($rss && $adb->num_rows($rss)>0 && !empty($rss->fields['validation'])) {
-					$focus = new cbMap();
-					$focus->mode = '';
-					$focus->id = $rss->fields['validation'];
-					$focus->retrieve_entity_info($rss->fields['validation'], 'cbMap');
-					$validation = $focus->Validations($entity, $crmid, false);
-					if (!$validation) {
-						$wfs = $adb->pquery('SELECT wfid FROM vtiger_cbprocesssteprel WHERE stepid=? and !positive', array($rss->fields['cbprocessstepid']));
-						// insert into queue
-						while ($wf = $adb->fetch_array(($wfs))) {
-							$checkpresence = $adb->pquery(
-								'SELECT 1 FROM vtiger_cbprocessalertqueue WHERE crmid=? AND wfid=? AND nexttrigger_time=0',
-								array($crmid, $wf['wfid'])
-							);
-							if ($checkpresence && $adb->num_rows($checkpresence)==0) {
-								$adb->pquery(
-									'insert into vtiger_cbprocessalertqueue (crmid, whenarrived, alertid, wfid, nexttrigger_time) values (?,NOW(),0,?,0)',
+				if ($rss && $adb->num_rows($rss)>0) {
+					if (!empty($rss->fields['validation'])) {
+						$focus = new cbMap();
+						$focus->mode = '';
+						$focus->id = $rss->fields['validation'];
+						$focus->retrieve_entity_info($rss->fields['validation'], 'cbMap');
+						$validation = $focus->Validations($entity, $crmid, false);
+						if (is_array($validation)) {
+							$wfs = $adb->pquery('SELECT wfid FROM vtiger_cbprocesssteprel WHERE stepid=? and !positive', array($rss->fields['cbprocessstepid']));
+							// insert into queue
+							while ($wf = $adb->fetch_array(($wfs))) {
+								$checkpresence = $adb->pquery(
+									'SELECT 1 FROM vtiger_cbprocessalertqueue WHERE crmid=? AND wfid=? AND nexttrigger_time=0',
 									array($crmid, $wf['wfid'])
 								);
+								if ($checkpresence && $adb->num_rows($checkpresence)==0) {
+									$adb->pquery(
+										'insert into vtiger_cbprocessalertqueue (crmid, whenarrived, alertid, wfid, nexttrigger_time) values (?,NOW(),0,?,0)',
+										array($crmid, $wf['wfid'])
+									);
+								}
 							}
+							return false;
 						}
-						return false;
 					}
+				} else {
+					return false;
 				}
 			}
 		}
