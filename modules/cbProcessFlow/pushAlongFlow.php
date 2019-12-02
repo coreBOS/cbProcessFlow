@@ -39,13 +39,17 @@ class pushAlongFlow_DetailViewBlock extends DeveloperBlock {
 		$askifsure = $this->getFromContext('askifsure');
 		$module = getSalesEntityType($recid);
 		$rs = $adb->pquery(
-			'select cbprocessflowid, pffield
+			'select cbprocessflowid, pffield, pfcondition
 			from vtiger_cbprocessflow
 			inner join vtiger_crmentity on crmid=cbprocessflowid
 			where deleted=0 and pfmodule=? and active=1',
 			array($module)
 		);
 		if (!$rs || $adb->num_rows($rs)==0) {
+			return getTranslatedString('LBL_NO_DATA');
+		}
+		$pfcondition = $rs->fields['pfcondition'];
+		if (!empty($pfcondition) && !coreBOS_Rule::evaluate($pfcondition, $recid)) {
 			return getTranslatedString('LBL_NO_DATA');
 		}
 		$processflow = $rs->fields['cbprocessflowid'];
