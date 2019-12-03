@@ -28,7 +28,6 @@ function validateFlowStep($fieldname, $fieldvalue, $params, $entity) {
 	if ($rs && $adb->num_rows($rs)>0) {
 		$pffield = $rs->fields['pffield'];
 		// $isNew = true;
-		$log->fatal($entity);
 		if (empty($entity['mode']) && empty($entity['record'])) {
 			$rss = $adb->pquery(
 				'SELECT 1
