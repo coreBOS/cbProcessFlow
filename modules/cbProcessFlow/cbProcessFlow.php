@@ -202,7 +202,7 @@ class cbProcessFlow extends CRMEntity {
 			from vtiger_cbprocessstep
 			inner join vtiger_crmentity on crmid=cbprocessstepid
 			inner join vtiger_cbprocessflow on processflow=cbprocessflowid
-			where deleted=0 and processflow=? and fromstep=?',
+			where deleted=0 and processflow=? and fromstep=? and active',
 			array($processflow, $fromstate)
 		);
 		$states=array();
