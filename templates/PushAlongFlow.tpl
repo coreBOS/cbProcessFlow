@@ -2,7 +2,7 @@
 {$FLOWGRAPH}
 </div>
 <script>
-window.processflowmoveto = function (tostate, forrecord, askifsure) {
+window.processflowmoveto{$pflowid} = function (tostate, forrecord, askifsure) {
 	if (askifsure) {
 		$ans = confirm(alert_arr.WANT_TO_CONTINUE);
 	} else {
@@ -11,6 +11,7 @@ window.processflowmoveto = function (tostate, forrecord, askifsure) {
 	if ($ans) {
 		var txtBox = 'txtbox_{$fieldName}';
 		document.getElementById(txtBox).value = tostate;
+		document.getElementById('cbcustominfo2').value = '{$pflowid}';
 		dtlViewAjaxSave('{$fieldName}', '{$module}', '{$uitype}', '', '{$fieldName}', forrecord);
 	}
 }

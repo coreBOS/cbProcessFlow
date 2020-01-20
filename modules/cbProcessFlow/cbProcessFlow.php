@@ -130,7 +130,7 @@ class cbProcessFlow extends CRMEntity {
 			$tabid,
 			'DETAILVIEWWIDGET',
 			'Push Along Flow',
-			'module=cbProcessFlow&action=cbProcessFlowAjax&file=pushAlongFlow&id=$RECORD$',
+			'module=cbProcessFlow&action=cbProcessFlowAjax&file=pushAlongFlow&id=$RECORD$&pflowid='.$this->id,
 			'',
 			'',
 			'',
@@ -167,7 +167,7 @@ class cbProcessFlow extends CRMEntity {
 	</field>
 </fields>
 </map>';
-		vtws_upsert('cbMap', $rec, 'mapname', $rec, $current_user);
+		vtws_upsert('cbMap', $rec, 'mapname', implode(',', array_keys($rec)), $current_user);
 		$modplog = Vtiger_Module::getInstance('ProcessLog');
 		$field = Vtiger_Field::getInstance('relatedflow', $modplog);
 		$field->setRelatedModules(array($this->column_fields['pfmodule']));
@@ -227,7 +227,7 @@ class cbProcessFlow extends CRMEntity {
 		foreach ($states as $state => $to) {
 			$letter = next($letters);
 			$graph .= $from.$letter.'('.$to.")\n";
-			$graph .= "click $letter \"javascript:processflowmoveto('$state', $record, $askifsure)\"\n";
+			$graph .= "click $letter \"javascript:processflowmoveto$processflow('$state', $record, $askifsure)\"\n";
 		}
 		return $graph;
 	}

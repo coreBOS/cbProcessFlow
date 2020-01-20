@@ -17,14 +17,25 @@
 function validateFlowStep($fieldname, $fieldvalue, $params, $entity) {
 	global $log, $adb;
 	$log->debug('> Process Alert After Save');
-	$moduleName = $entity['module'];
-	$rs = $adb->pquery(
-		'select cbprocessflowid, pffield, pfcondition
-		from vtiger_cbprocessflow
-		inner join vtiger_crmentity on crmid=cbprocessflowid
-		where deleted=0 and pfmodule=? and active=?',
-		array($moduleName, '1')
-	);
+	if (empty($entity['cbcustominfo2'])) {
+		$moduleName = $entity['module'];
+		$rs = $adb->pquery(
+			'select cbprocessflowid, pffield, pfcondition
+			from vtiger_cbprocessflow
+			inner join vtiger_crmentity on crmid=cbprocessflowid
+			where deleted=0 and pfmodule=? and active=?',
+			array($moduleName, '1')
+		);
+	} else {
+		$pflowid = $entity['cbcustominfo2'];
+		$rs = $adb->pquery(
+			'select cbprocessflowid, pffield, pfcondition
+			from vtiger_cbprocessflow
+			inner join vtiger_crmentity on crmid=cbprocessflowid
+			where deleted=0 and cbprocessflowid=?',
+			array($pflowid)
+		);
+	}
 	if ($rs && $adb->num_rows($rs)>0) {
 		$pffield = $rs->fields['pffield'];
 		// $isNew = true;

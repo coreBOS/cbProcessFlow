@@ -36,14 +36,15 @@ class pushAlongFlow_DetailViewBlock extends DeveloperBlock {
 		global $adb, $current_user;
 		$this->context = $context;
 		$recid = $this->getFromContext('id');
+		$pflowid = $this->getFromContext('pflowid');
 		$askifsure = $this->getFromContext('askifsure');
 		$module = getSalesEntityType($recid);
 		$rs = $adb->pquery(
-			'select cbprocessflowid, pffield, pfcondition
+			'select pffield, pfcondition
 			from vtiger_cbprocessflow
 			inner join vtiger_crmentity on crmid=cbprocessflowid
-			where deleted=0 and pfmodule=? and active=1',
-			array($module)
+			where deleted=0 and cbprocessflowid=?',
+			array($pflowid)
 		);
 		if (!$rs || $adb->num_rows($rs)==0) {
 			return getTranslatedString('LBL_NO_DATA');
@@ -52,7 +53,7 @@ class pushAlongFlow_DetailViewBlock extends DeveloperBlock {
 		if (!empty($pfcondition) && !coreBOS_Rule::evaluate($pfcondition, $recid)) {
 			return getTranslatedString('LBL_NO_DATA');
 		}
-		$processflow = $rs->fields['cbprocessflowid'];
+		$processflow = $pflowid;
 		$pffield = $rs->fields['pffield'];
 		$queryGenerator = new QueryGenerator($module, $current_user);
 		$queryGenerator->setFields(array($pffield));
@@ -71,6 +72,7 @@ class pushAlongFlow_DetailViewBlock extends DeveloperBlock {
 		$smarty->assign('module', $module);
 		$smarty->assign('uitype', $fld->uitype);
 		$smarty->assign('fieldName', $fld->name);
+		$smarty->assign('pflowid', $pflowid);
 		return $smarty->fetch('modules/cbProcessFlow/PushAlongFlow.tpl');
 	}
 }
