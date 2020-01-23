@@ -17,7 +17,7 @@
 function validateFlowStep($fieldname, $fieldvalue, $params, $entity) {
 	global $log, $adb;
 	$log->debug('> Process Alert After Save');
-	if (empty($entity['cbcustominfo2'])) {
+	if (empty($entity['cbcustominfo2']) && empty($params[0])) {
 		$moduleName = $entity['module'];
 		$rs = $adb->pquery(
 			'select cbprocessflowid, pffield, pfcondition
@@ -27,7 +27,11 @@ function validateFlowStep($fieldname, $fieldvalue, $params, $entity) {
 			array($moduleName, '1')
 		);
 	} else {
-		$pflowid = $entity['cbcustominfo2'];
+		if (empty($params[0])) {
+			$pflowid = $entity['cbcustominfo2'];
+		} else {
+			$pflowid = $params[0];
+		}
 		$rs = $adb->pquery(
 			'select cbprocessflowid, pffield, pfcondition
 			from vtiger_cbprocessflow
