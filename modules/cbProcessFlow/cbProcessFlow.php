@@ -222,7 +222,7 @@ class cbProcessFlow extends CRMEntity {
 		}
 		$askifsure = empty($askifsure) ? 'false' : 'true';
 		$graph = "graph LR\n";
-		$from = "A(".getTranslatedString($fromstate, $module).') --> ';
+		$from = 'A("'.getTranslatedString($fromstate, $module).'") --> ';
 		$letters = range('B', 'Z');
 		foreach ($states as $state => $to) {
 			$letter = next($letters);
