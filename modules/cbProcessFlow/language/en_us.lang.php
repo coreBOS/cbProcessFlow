@@ -23,5 +23,6 @@ $mod_strings = array(
 	'pfcondition' => 'Condition',
 	'pffield' => 'Field',
 	'active' => 'Active',
+	'pfinitialstates' => 'Initial States',
 );
 ?>

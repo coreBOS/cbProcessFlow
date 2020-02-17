@@ -40,6 +40,7 @@
   `pffield` varchar(155) DEFAULT NULL,
   `active` varchar(3) DEFAULT NULL,
   `pfcondition` int(11) DEFAULT NULL,
+  `pfinitialstates` varchar(211) DEFAULT NULL,
   PRIMARY KEY (`cbprocessflowid`),
   INDEX(`pfmodule`,`active`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8]]></sql>
@@ -155,7 +156,7 @@
 <selected>0</selected>
 <sequence>5</sequence>
 <maximumlength>100</maximumlength>
-<typeofdata>V~O</typeofdata>
+<typeofdata>V~M</typeofdata>
 <quickcreate>0</quickcreate>
 <quickcreatesequence>0</quickcreatesequence>
 <displaytype>1</displaytype>
@@ -184,18 +185,18 @@
 <masseditable>1</masseditable>
 </field>
 <field>
-<fieldname>active</fieldname>
-<uitype>56</uitype>
-<columnname>active</columnname>
+<fieldname>pfinitialstates</fieldname>
+<uitype>1</uitype>
+<columnname>pfinitialstates</columnname>
 <tablename>vtiger_cbprocessflow</tablename>
 <generatedtype>1</generatedtype>
-<fieldlabel>active</fieldlabel>
+<fieldlabel>pfinitialstates</fieldlabel>
 <readonly>1</readonly>
 <presence>0</presence>
 <selected>0</selected>
 <sequence>7</sequence>
 <maximumlength>100</maximumlength>
-<typeofdata>C~O</typeofdata>
+<typeofdata>V~M</typeofdata>
 <quickcreate>0</quickcreate>
 <quickcreatesequence>0</quickcreatesequence>
 <displaytype>1</displaytype>
@@ -224,6 +225,26 @@
 <masseditable>0</masseditable>
 </field>
 <field>
+<fieldname>active</fieldname>
+<uitype>56</uitype>
+<columnname>active</columnname>
+<tablename>vtiger_cbprocessflow</tablename>
+<generatedtype>1</generatedtype>
+<fieldlabel>active</fieldlabel>
+<readonly>1</readonly>
+<presence>0</presence>
+<selected>0</selected>
+<sequence>9</sequence>
+<maximumlength>100</maximumlength>
+<typeofdata>C~O</typeofdata>
+<quickcreate>0</quickcreate>
+<quickcreatesequence>0</quickcreatesequence>
+<displaytype>1</displaytype>
+<info_type>BAS</info_type>
+<helpinfo><![CDATA[]]></helpinfo>
+<masseditable>1</masseditable>
+</field>
+<field>
 <fieldname>createdtime</fieldname>
 <uitype>70</uitype>
 <columnname>createdtime</columnname>
@@ -233,7 +254,7 @@
 <readonly>1</readonly>
 <presence>0</presence>
 <selected>0</selected>
-<sequence>9</sequence>
+<sequence>10</sequence>
 <maximumlength>100</maximumlength>
 <typeofdata>DT~O</typeofdata>
 <quickcreate>3</quickcreate>
@@ -253,7 +274,7 @@
 <readonly>1</readonly>
 <presence>0</presence>
 <selected>0</selected>
-<sequence>10</sequence>
+<sequence>11</sequence>
 <maximumlength>100</maximumlength>
 <typeofdata>DT~O</typeofdata>
 <quickcreate>3</quickcreate>
@@ -317,8 +338,12 @@
 <columnindex>3</columnindex>
 </field>
 <field>
-<fieldname>active</fieldname>
+<fieldname>pfinitialstates</fieldname>
 <columnindex>4</columnindex>
+</field>
+<field>
+<fieldname>active</fieldname>
+<columnindex>5</columnindex>
 </field>
 </fields>
 </customview>

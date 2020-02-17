@@ -45,15 +45,8 @@ function validateFlowStep($fieldname, $fieldvalue, $params, $entity) {
 		// $isNew = true;
 		if (empty($entity['mode']) && empty($entity['record'])) {
 			$rss = $adb->pquery(
-				'SELECT 1
-				FROM `vtiger_cbprocessstep`
-				INNER JOIN vtiger_crmentity on crmid=cbprocessstepid
-				WHERE deleted=0 and `processflow`=? and fromstep=? and active=? and fromstep not in
-				(select distinct tostep
-				FROM `vtiger_cbprocessstep`
-				INNER JOIN vtiger_crmentity on crmid=cbprocessstepid
-				WHERE deleted=0 and `processflow`=? and active=?)',
-				array($rs->fields['cbprocessflowid'], $entity[$pffield], '1', $rs->fields['cbprocessflowid'], '1')
+				'SELECT 1 FROM vtiger_cbprocessflow WHERE cbprocessflowid=? and pfinitialstates LIKE ?',
+				array($rs->fields['cbprocessflowid'], '%'.$entity[$pffield].'%')
 			);
 			if ($rss && $adb->num_rows($rss)>0) {
 				return true;

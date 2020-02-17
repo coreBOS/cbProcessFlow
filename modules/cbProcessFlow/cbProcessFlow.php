@@ -60,6 +60,7 @@ class cbProcessFlow extends CRMEntity {
 		'processflowname' => array('cbprocessflow' => 'processflowname'),
 		'pfmodule' => array('cbprocessflow' => 'pfmodule'),
 		'pffield' => array('cbprocessflow' => 'field'),
+		'pfinitialstates' => array('cbprocessflow' => 'pfinitialstates'),
 		'active' => array('cbprocessflow' => 'active'),
 		'Assigned To' => array('crmentity' => 'smownerid')
 	);
@@ -69,6 +70,7 @@ class cbProcessFlow extends CRMEntity {
 		'processflowname' => 'processflowname',
 		'pfmodule' => 'pfmodule',
 		'pffield' => 'field',
+		'pfinitialstates' => 'pfinitialstates',
 		'active' => 'active',
 		'Assigned To' => 'assigned_user_id'
 	);
@@ -84,6 +86,7 @@ class cbProcessFlow extends CRMEntity {
 		'processflowname' => array('cbprocessflow' => 'processflowname'),
 		'pfmodule' => array('cbprocessflow' => 'pfmodule'),
 		'pffield' => array('cbprocessflow' => 'field'),
+		'pfinitialstates' => array('cbprocessflow' => 'pfinitialstates'),
 		'active' => array('cbprocessflow' => 'active'),
 	);
 	public $search_fields_name = array(
@@ -92,6 +95,7 @@ class cbProcessFlow extends CRMEntity {
 		'processflowname' => 'processflowname',
 		'pfmodule' => 'pfmodule',
 		'pffield' => 'field',
+		'pfinitialstates' => 'pfinitialstates',
 		'active' => 'active',
 	);
 
