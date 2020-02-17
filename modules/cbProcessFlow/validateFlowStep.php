@@ -23,8 +23,8 @@ function validateFlowStep($fieldname, $fieldvalue, $params, $entity) {
 			'select cbprocessflowid, pffield, pfcondition
 			from vtiger_cbprocessflow
 			inner join vtiger_crmentity on crmid=cbprocessflowid
-			where deleted=0 and pfmodule=? and active=?',
-			array($moduleName, '1')
+			where deleted=0 and pfmodule=? and pffield=? and active=?',
+			array($moduleName, $fieldname, '1')
 		);
 	} else {
 		if (empty($params[0])) {
