@@ -73,6 +73,7 @@ class pushAlongFlow_DetailViewBlock extends DeveloperBlock {
 		$smarty->assign('uitype', $fld->uitype);
 		$smarty->assign('fieldName', $fld->name);
 		$smarty->assign('pflowid', $pflowid);
+		$smarty->assign('isInEditMode', !empty($this->getFromContext('editmode')));
 		return $smarty->fetch('modules/cbProcessFlow/PushAlongFlow.tpl');
 	}
 }
