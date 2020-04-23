@@ -38,6 +38,9 @@ class pushAlongFlow_DetailViewBlock extends DeveloperBlock {
 		$recid = $this->getFromContext('id');
 		$pflowid = $this->getFromContext('pflowid');
 		$askifsure = $this->getFromContext('askifsure');
+		if ($recid == '' || $recid == '$RECORD$') {
+			return '';
+		}
 		$module = getSalesEntityType($recid);
 		$rs = $adb->pquery(
 			'select pffield, pfcondition
@@ -55,6 +58,9 @@ class pushAlongFlow_DetailViewBlock extends DeveloperBlock {
 		}
 		$processflow = $pflowid;
 		$pffield = $rs->fields['pffield'];
+		if ($module == '') {
+			return '';
+		}
 		$queryGenerator = new QueryGenerator($module, $current_user);
 		$queryGenerator->setFields(array($pffield));
 		$queryGenerator->addCondition('id', $recid, 'e', $queryGenerator::$AND);
