@@ -65,22 +65,32 @@ class pushAlongFlow_DetailViewBlock extends DeveloperBlock {
 		$queryGenerator->setFields(array($pffield));
 		$queryGenerator->addCondition('id', $recid, 'e', $queryGenerator::$AND);
 		$query = $queryGenerator->getQuery();
+		// var_dump($query); die();
 		$rs = $adb->query($query);
-		$fromstate = $rs->fields[$pffield];
-		$graph = cbProcessFlow::getDestinationStatesGraph($processflow, $fromstate, $recid, $askifsure);
-		if ($graph=='') {
-			return getTranslatedString('LBL_NO_DATA');
+		if ($pffield != '') {
+			$tabid = getTabId($module);
+			$sql = "SELECT columnname, fieldname FROM vtiger_field WHERE tabid = $tabid";
+			$result = $adb->query($sql);
+			$col = $adb->query_result($result, 0, 'columnname');
+			$fld = $adb->query_result($result, 0, 'fieldname');
+			if ($fld == $pffield) {
+				$fromstate = $rs->fields[$col];
+				$graph = cbProcessFlow::getDestinationStatesGraph($processflow, $fromstate, $recid, $askifsure);
+				if ($graph=='') {
+					return getTranslatedString('LBL_NO_DATA');
+				}
+				$smarty = $this->getViewer();
+				$smarty->assign('FLOWGRAPH', $graph);
+				$mod = Vtiger_Module::getInstance($module);
+				$fld = Vtiger_Field::getInstance($pffield, $mod);
+				$smarty->assign('module', $module);
+				$smarty->assign('uitype', $fld->uitype);
+				$smarty->assign('fieldName', $fld->name);
+				$smarty->assign('pflowid', $pflowid);
+				$smarty->assign('isInEditMode', !empty($this->getFromContext('editmode')));
+				return $smarty->fetch('modules/cbProcessFlow/PushAlongFlow.tpl');
+			}
 		}
-		$smarty = $this->getViewer();
-		$smarty->assign('FLOWGRAPH', $graph);
-		$mod = Vtiger_Module::getInstance($module);
-		$fld = Vtiger_Field::getInstance($pffield, $mod);
-		$smarty->assign('module', $module);
-		$smarty->assign('uitype', $fld->uitype);
-		$smarty->assign('fieldName', $fld->name);
-		$smarty->assign('pflowid', $pflowid);
-		$smarty->assign('isInEditMode', !empty($this->getFromContext('editmode')));
-		return $smarty->fetch('modules/cbProcessFlow/PushAlongFlow.tpl');
 	}
 }
 
