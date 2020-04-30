@@ -38,10 +38,9 @@ class pushAlongFlow_DetailViewBlock extends DeveloperBlock {
 		$recid = $this->getFromContext('id');
 		$pflowid = $this->getFromContext('pflowid');
 		$askifsure = $this->getFromContext('askifsure');
-		if ($recid == '' || $recid == '$RECORD$') {
+		if (empty($recid) || $recid == '$RECORD$') {
 			return '';
 		}
-		$module = getSalesEntityType($recid);
 		$rs = $adb->pquery(
 			'select pffield, pfcondition
 			from vtiger_cbprocessflow
@@ -58,39 +57,34 @@ class pushAlongFlow_DetailViewBlock extends DeveloperBlock {
 		}
 		$processflow = $pflowid;
 		$pffield = $rs->fields['pffield'];
+
+		$module = getSalesEntityType($recid);
 		if ($module == '') {
 			return '';
 		}
+
 		$queryGenerator = new QueryGenerator($module, $current_user);
 		$queryGenerator->setFields(array($pffield));
 		$queryGenerator->addCondition('id', $recid, 'e', $queryGenerator::$AND);
 		$query = $queryGenerator->getQuery();
-		// var_dump($query); die();
 		$rs = $adb->query($query);
-		if ($pffield != '') {
-			$tabid = getTabId($module);
-			$sql = "SELECT columnname, fieldname FROM vtiger_field WHERE tabid = $tabid";
-			$result = $adb->query($sql);
-			$col = $adb->query_result($result, 0, 'columnname');
-			$fld = $adb->query_result($result, 0, 'fieldname');
-			if ($fld == $pffield) {
-				$fromstate = $rs->fields[$col];
-				$graph = cbProcessFlow::getDestinationStatesGraph($processflow, $fromstate, $recid, $askifsure);
-				if ($graph=='') {
-					return getTranslatedString('LBL_NO_DATA');
-				}
-				$smarty = $this->getViewer();
-				$smarty->assign('FLOWGRAPH', $graph);
-				$mod = Vtiger_Module::getInstance($module);
-				$fld = Vtiger_Field::getInstance($pffield, $mod);
-				$smarty->assign('module', $module);
-				$smarty->assign('uitype', $fld->uitype);
-				$smarty->assign('fieldName', $fld->name);
-				$smarty->assign('pflowid', $pflowid);
-				$smarty->assign('isInEditMode', !empty($this->getFromContext('editmode')));
-				return $smarty->fetch('modules/cbProcessFlow/PushAlongFlow.tpl');
-			}
+		$tabid = getTabId($module);
+		$new_pffield = getColumnnameByFieldname($tabid, $pffield);
+		$fromstate = $rs->fields[$new_pffield];
+		$graph = cbProcessFlow::getDestinationStatesGraph($processflow, $fromstate, $recid, $askifsure);
+		if ($graph=='') {
+			return getTranslatedString('LBL_NO_DATA');
 		}
+		$smarty = $this->getViewer();
+		$smarty->assign('FLOWGRAPH', $graph);
+		$mod = Vtiger_Module::getInstance($module);
+		$fld = Vtiger_Field::getInstance($pffield, $mod);
+		$smarty->assign('module', $module);
+		$smarty->assign('uitype', $fld->uitype);
+		$smarty->assign('fieldName', $fld->name);
+		$smarty->assign('pflowid', $pflowid);
+		$smarty->assign('isInEditMode', !empty($this->getFromContext('editmode')));
+		return $smarty->fetch('modules/cbProcessFlow/PushAlongFlow.tpl');
 	}
 }
 
