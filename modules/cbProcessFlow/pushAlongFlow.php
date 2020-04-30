@@ -38,7 +38,9 @@ class pushAlongFlow_DetailViewBlock extends DeveloperBlock {
 		$recid = $this->getFromContext('id');
 		$pflowid = $this->getFromContext('pflowid');
 		$askifsure = $this->getFromContext('askifsure');
-		$module = getSalesEntityType($recid);
+		if (empty($recid) || $recid == '$RECORD$') {
+			return '';
+		}
 		$rs = $adb->pquery(
 			'select pffield, pfcondition
 			from vtiger_cbprocessflow
@@ -55,12 +57,20 @@ class pushAlongFlow_DetailViewBlock extends DeveloperBlock {
 		}
 		$processflow = $pflowid;
 		$pffield = $rs->fields['pffield'];
+
+		$module = getSalesEntityType($recid);
+		if ($module == '') {
+			return '';
+		}
+
 		$queryGenerator = new QueryGenerator($module, $current_user);
 		$queryGenerator->setFields(array($pffield));
 		$queryGenerator->addCondition('id', $recid, 'e', $queryGenerator::$AND);
 		$query = $queryGenerator->getQuery();
 		$rs = $adb->query($query);
-		$fromstate = $rs->fields[$pffield];
+		$tabid = getTabId($module);
+		$new_pffield = getColumnnameByFieldname($tabid, $pffield);
+		$fromstate = $rs->fields[$new_pffield];
 		$graph = cbProcessFlow::getDestinationStatesGraph($processflow, $fromstate, $recid, $askifsure);
 		if ($graph=='') {
 			return getTranslatedString('LBL_NO_DATA');
