@@ -18,6 +18,7 @@ window.processflowmoveto{$pflowid} = function (tostate, forrecord, askifsure) {
 		dtlViewAjaxSave('{$fieldName}', '{$module}', '{$uitype}', '', '{$fieldName}', forrecord);
 		{/if}
 	}
+	return false;
 }
 mermaid.initialize({
 	securityLevel: 'loose'
