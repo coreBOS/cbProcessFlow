@@ -108,7 +108,8 @@ function cbwsPushAlongFlow($pflowid, $contextid, $user) {
 	$queryGenerator->addCondition('id', $recid, 'e', $queryGenerator::$AND);
 	$query = $queryGenerator->getQuery();
 	$rs = $adb->query($query);
-	$fromstate = $rs->fields[$pffield];
+	$pfcolumn = getColumnnameByFieldname(getTabId($entityName), $pffield);
+	$fromstate = $rs->fields[$pfcolumn];
 	$graph = cbProcessFlow::getDestinationStatesGraph($pflowid, $fromstate, $recid, true);
 	if ($graph=='') {
 		return $ret;
