@@ -199,10 +199,22 @@ class cbProcessFlow extends CRMEntity {
 		}
 	}
 
-	public static function getDestinationStatesArray($processflow, $fromstate) {
+	public static function getDestinationStatesArray($processflow, $fromstate, $record) {
 		global $adb;
+		$exists = isRecordExists($record);
+		if ($exists) {
+			$cbmap = new cbMap();
+			$cbmap->mode = '';
+			$recordType = getSalesEntityType($record);
+			$entity = CRMEntity::getInstance($recordType);
+			$entity->mode = '';
+			$entity->retrieve_entity_info($record, $recordType);
+			$columns = $entity->column_fields;
+			$columns['record'] = $record;
+			$columns['module'] = $recordType;
+		}
 		$rs = $adb->pquery(
-			'select tostep, pfmodule
+			'select tostep, pfmodule, isactivevalidation
 			from vtiger_cbprocessstep
 			inner join vtiger_crmentity on crmid=cbprocessstepid
 			inner join vtiger_cbprocessflow on processflow=cbprocessflowid
@@ -211,7 +223,15 @@ class cbProcessFlow extends CRMEntity {
 		);
 		$states=array();
 		while ($st = $adb->fetch_array($rs)) {
-			$states[$st['tostep']] = getTranslatedString($st['tostep'], $st['pfmodule']);
+			if ($exists && !empty($st['isactivevalidation'])) {
+				$cbmap->id = $st['isactivevalidation'];
+				$cbmap->retrieve_entity_info($st['isactivevalidation'], 'cbMap');
+				if ($cbmap->Validations($columns, $record, false)===true) {
+					$states[$st['tostep']] = getTranslatedString($st['tostep'], $st['pfmodule']);
+				}
+			} else {
+				$states[$st['tostep']] = getTranslatedString($st['tostep'], $st['pfmodule']);
+			}
 		}
 		return $states;
 	}
@@ -220,7 +240,7 @@ class cbProcessFlow extends CRMEntity {
 		global $adb;
 		$rs = $adb->pquery('select pfmodule from vtiger_cbprocessflow where cbprocessflowid=?', array($processflow));
 		$module = $adb->query_result($rs, 0, 0);
-		$states = self::getDestinationStatesArray($processflow, $fromstate);
+		$states = self::getDestinationStatesArray($processflow, $fromstate, $record);
 		if (empty($states)) {
 			return '';
 		}

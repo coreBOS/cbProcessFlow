@@ -63,13 +63,23 @@ function validateFlowStep($fieldname, $fieldvalue, $params, $entity) {
 			$pfcondition = $rs->fields['pfcondition'];
 			if (empty($pfcondition) || coreBOS_Rule::evaluate($pfcondition, $entity)) {
 				$rss = $adb->pquery(
-					'select cbprocessstepid, validation
+					'select cbprocessstepid, validation, isactivevalidation
 					from vtiger_cbprocessstep
 					inner join vtiger_crmentity on crmid=cbprocessstepid
 					where deleted=0 and processflow=? and fromstep=? and tostep=? and active=?',
 					array($rs->fields['cbprocessflowid'], $entity['current_'.$pffield], $entity[$pffield], '1')
 				);
 				if ($rss && $adb->num_rows($rss)>0) {
+					if (!empty($rss->fields['isactivevalidation'])) {
+						$focus = new cbMap();
+						$focus->mode = '';
+						$focus->id = $rss->fields['isactivevalidation'];
+						$focus->retrieve_entity_info($rss->fields['isactivevalidation'], 'cbMap');
+						$validation = $focus->Validations($entity, $crmid, false);
+						if (is_array($validation) || $validation===false) { // step is not active
+							return true;
+						}
+					}
 					if (!empty($rss->fields['validation'])) {
 						$focus = new cbMap();
 						$focus->mode = '';
@@ -131,13 +141,23 @@ function validateFlowStepGetMessage($fieldname, $fieldvalue, $params, $entity, $
 	if ($rs && $adb->num_rows($rs)>0) {
 		$pffield = $rs->fields['pffield'];
 		$rss = $adb->pquery(
-			'select cbprocessstepid, validation
+			'select cbprocessstepid, validation, isactivevalidation
 			from vtiger_cbprocessstep
 			inner join vtiger_crmentity on crmid=cbprocessstepid
 			where deleted=0 and processflow=? and fromstep=? and tostep=? and active=?',
 			array($rs->fields['cbprocessflowid'], $entity['current_'.$pffield], $entity[$pffield], '1')
 		);
 		if ($rss && $adb->num_rows($rss)>0 && !empty($rss->fields['validation'])) {
+			if (!empty($rss->fields['isactivevalidation'])) {
+				$focus = new cbMap();
+				$focus->mode = '';
+				$focus->id = $rss->fields['isactivevalidation'];
+				$focus->retrieve_entity_info($rss->fields['isactivevalidation'], 'cbMap');
+				$validation = $focus->Validations($entity, $entity['record'], false);
+				if (is_array($validation) || $validation===false) { // step is not active
+					return $currentMessage;
+				}
+			}
 			$focus = new cbMap();
 			$focus->mode = '';
 			$focus->id = $rss->fields['validation'];
