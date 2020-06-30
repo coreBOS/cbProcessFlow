@@ -102,3 +102,59 @@ function validateFlowStep($fieldname, $fieldvalue, $params, $entity) {
 	}
 	return true;
 }
+
+function validateFlowStepGetMessage($fieldname, $fieldvalue, $params, $entity, $currentMessage) {
+	global $adb;
+	if (empty($entity['cbcustominfo2']) && empty($params[0])) {
+		$moduleName = $entity['module'];
+		$rs = $adb->pquery(
+			'select cbprocessflowid, pffield, pfcondition
+			from vtiger_cbprocessflow
+			inner join vtiger_crmentity on crmid=cbprocessflowid
+			where deleted=0 and pfmodule=? and pffield=? and active=?',
+			array($moduleName, $fieldname, '1')
+		);
+	} else {
+		if (empty($params[0])) {
+			$pflowid = $entity['cbcustominfo2'];
+		} else {
+			$pflowid = $params[0];
+		}
+		$rs = $adb->pquery(
+			'select cbprocessflowid, pffield, pfcondition
+			from vtiger_cbprocessflow
+			inner join vtiger_crmentity on crmid=cbprocessflowid
+			where deleted=0 and cbprocessflowid=?',
+			array($pflowid)
+		);
+	}
+	if ($rs && $adb->num_rows($rs)>0) {
+		$pffield = $rs->fields['pffield'];
+		$rss = $adb->pquery(
+			'select cbprocessstepid, validation
+			from vtiger_cbprocessstep
+			inner join vtiger_crmentity on crmid=cbprocessstepid
+			where deleted=0 and processflow=? and fromstep=? and tostep=? and active=?',
+			array($rs->fields['cbprocessflowid'], $entity['current_'.$pffield], $entity[$pffield], '1')
+		);
+		if ($rss && $adb->num_rows($rss)>0 && !empty($rss->fields['validation'])) {
+			$focus = new cbMap();
+			$focus->mode = '';
+			$focus->id = $rss->fields['validation'];
+			$focus->retrieve_entity_info($rss->fields['validation'], 'cbMap');
+			$validation = $focus->Validations($entity, $entity['record'], false);
+			if (is_array($validation)) {
+				foreach ($validation as $emsg) {
+					$return = $emsg[0]; // we can only return one, so we return the first one
+					break;
+				}
+				return $return;
+			} else {
+				return $currentMessage;
+			}
+		} else {
+			return $currentMessage;
+		}
+	}
+	return $currentMessage;
+}
