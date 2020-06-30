@@ -34,6 +34,7 @@ class addIsActiveValidationField extends cbupdaterWorker {
 							'displaytype'=>'1',
 							'label'=>'isactivevalidation',
 							'massedit' => 1,
+							'mods' => array('cbMap'),
 						),
 					)
 				),
