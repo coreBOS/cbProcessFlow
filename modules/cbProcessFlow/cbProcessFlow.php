@@ -199,19 +199,27 @@ class cbProcessFlow extends CRMEntity {
 		}
 	}
 
-	public static function getDestinationStatesArray($processflow, $fromstate, $record) {
+	public static function getDestinationStatesArray($processflow, $fromstate, $record, $screenvalues) {
 		global $adb;
 		$exists = isRecordExists($record);
 		if ($exists) {
 			$cbmap = new cbMap();
 			$cbmap->mode = '';
-			$recordType = getSalesEntityType($record);
-			$entity = CRMEntity::getInstance($recordType);
-			$entity->mode = '';
-			$entity->retrieve_entity_info($record, $recordType);
-			$columns = $entity->column_fields;
-			$columns['record'] = $record;
-			$columns['module'] = $recordType;
+			if (empty($screenvalues)) {
+				$recordType = getSalesEntityType($record);
+				$entity = CRMEntity::getInstance($recordType);
+				$entity->mode = '';
+				$entity->retrieve_entity_info($record, $recordType);
+				$columns = $entity->column_fields;
+				$columns['record'] = $record;
+				$columns['module'] = $recordType;
+			} else {
+				$columns = $screenvalues;
+				if (empty($columns['module'])) {
+					$recordType = getSalesEntityType($record);
+					$columns['module'] = $recordType;
+				}
+			}
 		}
 		$rs = $adb->pquery(
 			'select tostep, pfmodule, isactivevalidation
@@ -236,11 +244,11 @@ class cbProcessFlow extends CRMEntity {
 		return $states;
 	}
 
-	public static function getDestinationStatesGraph($processflow, $fromstate, $record, $askifsure) {
+	public static function getDestinationStatesGraph($processflow, $fromstate, $record, $askifsure, $screenvalues) {
 		global $adb;
 		$rs = $adb->pquery('select pfmodule from vtiger_cbprocessflow where cbprocessflowid=?', array($processflow));
 		$module = $adb->query_result($rs, 0, 0);
-		$states = self::getDestinationStatesArray($processflow, $fromstate, $record);
+		$states = self::getDestinationStatesArray($processflow, $fromstate, $record, $screenvalues);
 		if (empty($states)) {
 			return '';
 		}

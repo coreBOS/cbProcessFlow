@@ -19,6 +19,15 @@ require_once 'modules/cbProcessFlow/cbProcessFlow.php';
 
 function cbwsPushAlongFlow($pflowid, $contextid, $user) {
 	global $adb, $log;
+	if (substr($contextid, 0, 1)=='{' && substr($contextid, -1)=='}') { // it is a json string of values
+		$context = json_decode($contextid, true);
+		if (json_last_error() !== JSON_ERROR_NONE) {
+			throw new WebServiceException(WebServiceErrorCode::$INVALID_PARAMETER, 'Invalid Process Flow context');
+		}
+		$contextid = $context['record'];
+	} else {
+		$context = '';
+	}
 	$pflowid = vtws_getWSID($pflowid);
 	$contextid = vtws_getWSID($contextid);
 	if (empty($pflowid)) {
@@ -110,7 +119,7 @@ function cbwsPushAlongFlow($pflowid, $contextid, $user) {
 	$rs = $adb->query($query);
 	$pfcolumn = getColumnnameByFieldname(getTabId($entityName), $pffield);
 	$fromstate = $rs->fields[$pfcolumn];
-	$graph = cbProcessFlow::getDestinationStatesGraph($pflowid, $fromstate, $recid, true);
+	$graph = cbProcessFlow::getDestinationStatesGraph($pflowid, $fromstate, $recid, true, $context);
 	if ($graph=='') {
 		return $ret;
 	}

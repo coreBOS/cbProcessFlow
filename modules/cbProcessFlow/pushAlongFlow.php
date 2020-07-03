@@ -71,7 +71,12 @@ class pushAlongFlow_DetailViewBlock extends DeveloperBlock {
 		$tabid = getTabId($module);
 		$new_pffield = getColumnnameByFieldname($tabid, $pffield);
 		$fromstate = $rs->fields[$new_pffield];
-		$graph = cbProcessFlow::getDestinationStatesGraph($processflow, $fromstate, $recid, $askifsure);
+		if (empty($this->getFromContext('structure'))) {
+			$screenvalues = '';
+		} else {
+			$screenvalues = json_decode($this->getFromContext('structure'), true);
+		}
+		$graph = cbProcessFlow::getDestinationStatesGraph($processflow, $fromstate, $recid, $askifsure, $screenvalues);
 		if ($graph=='') {
 			return getTranslatedString('LBL_NO_DATA');
 		}
