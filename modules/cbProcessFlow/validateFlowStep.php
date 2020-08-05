@@ -145,7 +145,7 @@ function validateFlowStepGetMessage($fieldname, $fieldvalue, $params, $entity, $
 			from vtiger_cbprocessstep
 			inner join vtiger_crmentity on crmid=cbprocessstepid
 			where deleted=0 and processflow=? and fromstep=? and tostep=? and active=?',
-			array($rs->fields['cbprocessflowid'], $entity['current_'.$pffield], $entity[$pffield], '1')
+			array($rs->fields['cbprocessflowid'], empty($entity['current_'.$pffield]) ? '' : $entity['current_'.$pffield], $entity[$pffield], '1')
 		);
 		if ($rss && $adb->num_rows($rss)>0 && !empty($rss->fields['validation'])) {
 			if (!empty($rss->fields['isactivevalidation'])) {
