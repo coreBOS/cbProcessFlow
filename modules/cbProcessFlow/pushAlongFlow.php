@@ -78,7 +78,7 @@ class pushAlongFlow_DetailViewBlock extends DeveloperBlock {
 		}
 		$graph = cbProcessFlow::getDestinationStatesGraph($processflow, $fromstate, $recid, $askifsure, $screenvalues);
 		if ($graph=='') {
-			return getTranslatedString('LBL_NO_DATA');
+			$graph = "graph LR\n".'A("'.getTranslatedString('LBL_NO_DATA').'")';
 		}
 		$smarty = $this->getViewer();
 		$smarty->assign('FLOWGRAPH', $graph);
