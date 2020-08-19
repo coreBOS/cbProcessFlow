@@ -201,6 +201,7 @@ class cbProcessFlow extends CRMEntity {
 
 	public static function getDestinationStatesArray($processflow, $fromstate, $record, $screenvalues) {
 		global $adb;
+		$columns = $screenvalues;
 		$exists = isRecordExists($record);
 		if ($exists) {
 			$cbmap = new cbMap();
@@ -214,7 +215,6 @@ class cbProcessFlow extends CRMEntity {
 				$columns['record'] = $record;
 				$columns['module'] = $recordType;
 			} else {
-				$columns = $screenvalues;
 				if (empty($columns['module'])) {
 					$recordType = getSalesEntityType($record);
 					$columns['module'] = $recordType;
