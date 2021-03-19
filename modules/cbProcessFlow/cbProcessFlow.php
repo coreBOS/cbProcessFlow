@@ -13,9 +13,6 @@ require_once 'modules/BusinessActions/BusinessActions.php';
 include_once 'include/Webservices/upsert.php';
 
 class cbProcessFlow extends CRMEntity {
-	public $db;
-	public $log;
-
 	public $table_name = 'vtiger_cbprocessflow';
 	public $table_index= 'cbprocessflowid';
 	public $column_fields = array();
