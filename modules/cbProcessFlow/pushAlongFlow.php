@@ -29,7 +29,7 @@ class pushAlongFlow {
 
 class pushAlongFlow_DetailViewBlock extends DeveloperBlock {
 	// Implement widget functionality
-	private $widgetName = 'pushAlongFlow';
+	protected $widgetName = 'pushAlongFlow';
 
 	// This one is called to get the contents to show on screen
 	public function process($context = false) {
