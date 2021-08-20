@@ -14,4 +14,11 @@
 	<classname>addIsActiveValidationField</classname>
 	<systemupdate>true</systemupdate>
 </changeSet>
+<changeSet>
+	<author>george1806</author>
+	<description>Add Show step validation field on Process Flow Step</description>
+	<filename>modules/cbProcessFlow/changesets/addShowStepValidationField.php</filename>
+	<classname>addShowStepValidationField</classname>
+	<systemupdate>true</systemupdate>
+</changeSet>
 </updatesChangeLog>

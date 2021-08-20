@@ -219,7 +219,7 @@ class cbProcessFlow extends CRMEntity {
 			}
 		}
 		$rs = $adb->pquery(
-			'select tostep, pfmodule, isactivevalidation
+			'select tostep, pfmodule, isactivevalidation, showstepvalidation
 			from vtiger_cbprocessstep
 			inner join vtiger_crmentity on crmid=cbprocessstepid
 			inner join vtiger_cbprocessflow on processflow=cbprocessflowid
@@ -228,14 +228,22 @@ class cbProcessFlow extends CRMEntity {
 		);
 		$states=array();
 		while ($st = $adb->fetch_array($rs)) {
-			if ($exists && !empty($st['isactivevalidation'])) {
-				$cbmap->id = $st['isactivevalidation'];
-				$cbmap->retrieve_entity_info($st['isactivevalidation'], 'cbMap');
+			if ($exists && !empty($st['showstepvalidation'])) {
+				$cbmap->id = $st['showstepvalidation'];
+				$cbmap->retrieve_entity_info($st['showstepvalidation'], 'cbMap');
 				if ($cbmap->Validations($columns, $record, false)===true) {
 					$states[$st['tostep']] = getTranslatedString($st['tostep'], $st['pfmodule']);
 				}
 			} else {
-				$states[$st['tostep']] = getTranslatedString($st['tostep'], $st['pfmodule']);
+				if ($exists && !empty($st['isactivevalidation'])) {
+					$cbmap->id = $st['isactivevalidation'];
+					$cbmap->retrieve_entity_info($st['isactivevalidation'], 'cbMap');
+					if ($cbmap->Validations($columns, $record, false)===true) {
+						$states[$st['tostep']] = getTranslatedString($st['tostep'], $st['pfmodule']);
+					}
+				} else {
+					$states[$st['tostep']] = getTranslatedString($st['tostep'], $st['pfmodule']);
+				}
 			}
 		}
 		return $states;
