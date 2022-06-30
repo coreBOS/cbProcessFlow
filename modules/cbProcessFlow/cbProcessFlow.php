@@ -264,7 +264,7 @@ class cbProcessFlow extends CRMEntity {
 		$links = '';
 		foreach ($states as $state => $to) {
 			$letter = next($letters);
-			$graph .= $from.$letter.'('.$to.")\n";
+			$graph .= $from.$letter.'('.getTranslatedString($to, $module).")\n";
 			$links .= "click $letter \"javascript:processflowmoveto$processflow('$state', $record, $askifsure)\"\n";
 		}
 		return $graph.$links;
