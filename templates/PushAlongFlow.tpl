@@ -1,4 +1,4 @@
-<div id="processflowpushalong" class="mermaid">
+<div id="processflowpushalong" class="{if $SHOW_GRAPH_AS=='MERMAID'}mermaid{else}slds-grid slds-wrap{/if}">
 {$FLOWGRAPH}
 </div>
 <script>
@@ -20,11 +20,12 @@ window.processflowmoveto{$pflowid} = function (tostate, forrecord, askifsure) {
 	}
 	return false;
 }
+{if $SHOW_GRAPH_AS=='MERMAID'}
 mermaid.initialize({
 	securityLevel: 'loose'
 });
 mermaid.init();
-
+{/if}
 function updatePushAlongGraph(change_field, action_field, new_value, old_value) {
 	// Create object which gets the values of all input, textarea, select and button elements from the form
 	var myFields = document.forms['EditView'].elements;
@@ -64,12 +65,16 @@ function updatePushAlongGraph(change_field, action_field, new_value, old_value) 
 		}
 	).then(response => response.text())
 	.then(graph => {
-		// document.getElementById('processflowpushalong').innerHTML = graph.substring(48, graph.indexOf('</div> <script>'));
-		// document.getElementById('processflowpushalong').setAttribute('data-processed', false);
-		// mermaid.init();
-		mermaid.render('processflowpushalongthrowaway', graph.substring(48, graph.indexOf('</div> <script>')), (svg) => {
-			document.getElementById('processflowpushalong').innerHTML = svg;
-		});
+		{if $SHOW_GRAPH_AS=='MERMAID'}
+			// document.getElementById('processflowpushalong').innerHTML = graph.substring(48, graph.indexOf('</div> <script>'));
+			// document.getElementById('processflowpushalong').setAttribute('data-processed', false);
+			// mermaid.init();
+			mermaid.render('processflowpushalongthrowaway', graph.substring(48, graph.indexOf('</div> <script>')), (svg) => {
+				document.getElementById('processflowpushalong').innerHTML = svg;
+			});
+		{else}
+			document.getElementById('processflowpushalong').innerHTML = graph;
+		{/if}
 	});
 }
 </script>

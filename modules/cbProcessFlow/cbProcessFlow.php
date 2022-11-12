@@ -219,7 +219,7 @@ class cbProcessFlow extends CRMEntity {
 			}
 		}
 		$rs = $adb->pquery(
-			'select tostep, pfmodule, isactivevalidation, showstepvalidation
+			'select tostep, pfmodule, isactivevalidation, showstepvalidation, buttonlabel
 			from vtiger_cbprocessstep
 			inner join vtiger_crmentity on crmid=cbprocessstepid
 			inner join vtiger_cbprocessflow on processflow=cbprocessflowid
@@ -228,21 +228,29 @@ class cbProcessFlow extends CRMEntity {
 		);
 		$states=array();
 		while ($st = $adb->fetch_array($rs)) {
+			$label = (empty($st['buttonlabel']) ? $st['tostep'] : $st['buttonlabel']);
+			if (substr($label, 0, 1)=='{') { // it is a JSON specification > make sure it has a label
+				$toinfo = json_decode($label, true);
+				if (empty($toinfo['label'])) {
+					$toinfo['label'] = getTranslatedString($st['tostep'], $st['pfmodule']);
+				}
+				$label = json_encode($toinfo);
+			}
 			if ($exists && !empty($st['showstepvalidation'])) {
 				$cbmap->id = $st['showstepvalidation'];
 				$cbmap->retrieve_entity_info($st['showstepvalidation'], 'cbMap');
 				if ($cbmap->Validations($columns, $record, false)===true) {
-					$states[$st['tostep']] = getTranslatedString($st['tostep'], $st['pfmodule']);
+					$states[$st['tostep']] = getTranslatedString($label, $st['pfmodule']);
 				}
 			} else {
 				if ($exists && !empty($st['isactivevalidation'])) {
 					$cbmap->id = $st['isactivevalidation'];
 					$cbmap->retrieve_entity_info($st['isactivevalidation'], 'cbMap');
 					if ($cbmap->Validations($columns, $record, false)===true) {
-						$states[$st['tostep']] = getTranslatedString($st['tostep'], $st['pfmodule']);
+						$states[$st['tostep']] = getTranslatedString($label, $st['pfmodule']);
 					}
 				} else {
-					$states[$st['tostep']] = getTranslatedString($st['tostep'], $st['pfmodule']);
+					$states[$st['tostep']] = getTranslatedString($label, $st['pfmodule']);
 				}
 			}
 		}
@@ -268,6 +276,43 @@ class cbProcessFlow extends CRMEntity {
 			$links .= "click $letter \"javascript:processflowmoveto$processflow('$state', $record, $askifsure)\"\n";
 		}
 		return $graph.$links;
+	}
+
+	public static function getDestinationStatesButtons($processflow, $fromstate, $record, $askifsure, $screenvalues) {
+		global $adb;
+		$rs = $adb->pquery('select pfmodule from vtiger_cbprocessflow where cbprocessflowid=?', array($processflow));
+		$module = $adb->query_result($rs, 0, 0);
+		$states = self::getDestinationStatesArray($processflow, $fromstate, $record, $screenvalues);
+		if (empty($states)) {
+			return '';
+		}
+		$askifsure = empty($askifsure) ? 'false' : 'true';
+		$graph = '';
+		foreach ($states as $state => $to) {
+			$to = trim($to);
+			if (substr($to, 0, 1)=='{') { // it is a JSON specification
+				// {"label":"some label", "type":"approve|decline|css_class"}
+				$toinfo = json_decode($to, true);
+				$type = (empty($toinfo['type']) ? 'slds-button_brand' :$toinfo['type']);
+				$link_label = (empty($toinfo['label']) ? 'Undefined' : $toinfo['label']);
+			} else {
+				$type = 'slds-button_brand';
+				$link_label = $to;
+			}
+			$slds_class = '';
+			if ($type == 'approve') {
+				$slds_class = 'slds-button_brand';
+				$link_label = 'Approve';
+			} elseif ($type == 'decline') {
+				$slds_class = 'slds-button_destructive';
+				$link_label = 'Decline';
+			} else {
+				$slds_class = $type;
+			}
+			$graph .= '<div class="slds-col slds-size_1-of-1 slds-p-around_xx-small"><a class="slds-button '.$slds_class.'" href="javascript:processflowmoveto'.$processflow."('$state', $record, $askifsure)".'">'
+				.getTranslatedString($link_label, $module).'</a></div>';
+		}
+		return $graph;
 	}
 
 	/**
