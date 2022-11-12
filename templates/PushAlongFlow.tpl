@@ -31,9 +31,16 @@ function updatePushAlongGraph(change_field, action_field, new_value, old_value) 
 	var sentForm = new Object();
 	for (var f=0; f<myFields.length; f++) {
 		if (myFields[f].type=='checkbox') {
-			sentForm[myFields[f].name] = myFields[f].checked;
+			if (myFields[f].checked) {
+				sentForm[myFields[f].name] = 'on';
+			}
 		} else if (myFields[f].type=='radio' && myFields[f].checked) {
 			sentForm[myFields[f].name] = myFields[f].value;
+		} else if (myFields[f].type == 'select-multiple') {
+			var myFieldValue = Array.prototype.map.call(myFields[f].selectedOptions, function (x) {
+				return x.value;
+			}).join(' |##| ');
+			sentForm[myFields[f].name.substring(0, myFields[f].name.length-2)] = myFieldValue;
 		} else if (myFields[f].type!='radio') {
 			sentForm[myFields[f].name] = myFields[f].value;
 		}
