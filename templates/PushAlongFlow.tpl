@@ -2,21 +2,26 @@
 {$FLOWGRAPH}
 </div>
 <script>
-window.processflowmoveto{$pflowid} = function (tostate, forrecord, askifsure) {
+window.processflowmoveto{$pflowid} = function (tostate, forrecord, askifsure, minfo) {
 	if (askifsure) {
 		$ans = confirm(alert_arr.WANT_TO_CONTINUE);
 	} else {
 		$ans = true;
 	}
 	if ($ans) {
-		{if $isInEditMode}
-		document.getElementById('{$fieldName}').value = tostate;
-		{else}
-		var txtBox = 'txtbox_{$fieldName}';
-		document.getElementById(txtBox).value = tostate;
-		document.getElementById('cbcustominfo2').value = '{$pflowid}';
-		dtlViewAjaxSave('{$fieldName}', '{$module}', '{$uitype}', '', '{$fieldName}', forrecord);
-		{/if}
+		if (minfo) {
+			let params='&minfo='+minfo+'&tostate='+tostate+'&fieldName={$fieldName}&bpmmodule={$module}&uitype={$uitype}&editmode={$isInEditMode}&pflowid={$pflowid}&bpmrecord='+forrecord;
+			window.open('index.php?action=cbProcessInfoAjax&file=bpmpopup&module=cbProcessInfo'+params, null, cbPopupWindowSettings + ',dependent=yes');
+		} else {
+			{if $isInEditMode}
+			document.getElementById('{$fieldName}').value = tostate;
+			{else}
+			var txtBox = 'txtbox_{$fieldName}';
+			document.getElementById(txtBox).value = tostate;
+			document.getElementById('cbcustominfo2').value = '{$pflowid}';
+			dtlViewAjaxSave('{$fieldName}', '{$module}', '{$uitype}', '', '{$fieldName}', forrecord);
+			{/if}
+		}
 	}
 	return false;
 }
