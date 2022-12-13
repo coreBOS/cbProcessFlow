@@ -47,12 +47,17 @@ class pushAlongFlow_DetailViewBlock extends DeveloperBlock {
 			where deleted=0 and cbprocessflowid=?',
 			array($pflowid)
 		);
+		$shownodata = $this->getFromContext('shownodata');
 		if (!$rs || $adb->num_rows($rs)==0) {
 			return getTranslatedString('LBL_NO_DATA');
 		}
 		$pfcondition = $rs->fields['pfcondition'];
 		if (!empty($pfcondition) && !coreBOS_Rule::evaluate($pfcondition, $recid)) {
-			return getTranslatedString('LBL_NO_DATA');
+			if (!empty($shownodata) && $shownodata == 0) {
+				return '';
+			} else {
+				return getTranslatedString('LBL_NO_DATA');
+			}
 		}
 		$processflow = $pflowid;
 		$pffield = $rs->fields['pffield'];
@@ -93,6 +98,9 @@ class pushAlongFlow_DetailViewBlock extends DeveloperBlock {
 			if ($graph=='') {
 				$graph = "graph LR\n".'A("'.getTranslatedString('LBL_NO_DATA').'")';
 			}
+		}
+		if (!empty($shownodata) && $shownodata == 0) {
+			$graph = '';
 		}
 		$smarty->assign('FLOWGRAPH', $graph);
 		$mod = Vtiger_Module::getInstance($module);
