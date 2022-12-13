@@ -49,7 +49,11 @@ class pushAlongFlow_DetailViewBlock extends DeveloperBlock {
 		);
 		$shownodata = $this->getFromContext('shownodata');
 		if (!$rs || $adb->num_rows($rs)==0) {
-			return getTranslatedString('LBL_NO_DATA');
+			if (!empty($shownodata) && $shownodata == 0) {
+				return '';
+			} else {
+				return getTranslatedString('LBL_NO_DATA');
+			}
 		}
 		$pfcondition = $rs->fields['pfcondition'];
 		if (!empty($pfcondition) && !coreBOS_Rule::evaluate($pfcondition, $recid)) {
