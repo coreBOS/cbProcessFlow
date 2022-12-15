@@ -49,7 +49,7 @@ class pushAlongFlow_DetailViewBlock extends DeveloperBlock {
 		);
 		$shownodata = $this->getFromContext('shownodata');
 		if (!$rs || $adb->num_rows($rs)==0) {
-			if (!empty($shownodata) && $shownodata == 0) {
+			if (isset($shownodata) && $shownodata === '0') {
 				return '';
 			} else {
 				return getTranslatedString('LBL_NO_DATA');
@@ -57,7 +57,7 @@ class pushAlongFlow_DetailViewBlock extends DeveloperBlock {
 		}
 		$pfcondition = $rs->fields['pfcondition'];
 		if (!empty($pfcondition) && !coreBOS_Rule::evaluate($pfcondition, $recid)) {
-			if (!empty($shownodata) && $shownodata == 0) {
+			if (isset($shownodata) && $shownodata === '0') {
 				return '';
 			} else {
 				return getTranslatedString('LBL_NO_DATA');
@@ -103,7 +103,7 @@ class pushAlongFlow_DetailViewBlock extends DeveloperBlock {
 				$graph = "graph LR\n".'A("'.getTranslatedString('LBL_NO_DATA').'")';
 			}
 		}
-		if (!empty($shownodata) && $shownodata == 0) {
+		if (isset($shownodata) && $shownodata === '0') {
 			$graph = '';
 		}
 		$smarty->assign('FLOWGRAPH', $graph);
