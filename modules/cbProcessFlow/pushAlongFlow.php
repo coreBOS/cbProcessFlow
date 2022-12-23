@@ -99,8 +99,10 @@ class pushAlongFlow_DetailViewBlock extends DeveloperBlock {
 		} else {
 			$smarty->assign('SHOW_GRAPH_AS', 'MERMAID');
 			$graph = cbProcessFlow::getDestinationStatesGraph($processflow, $fromstate, $recid, $askifsure, $screenvalues);
-			if (!isset($shownodata) || $shownodata !== '0') {
-				$graph = "graph LR\n".'A("'.getTranslatedString('LBL_NO_DATA').'")';
+			if ($graph=='') {
+				if (!isset($shownodata) || $shownodata !== '0') {
+					$graph = "graph LR\n".'A("'.getTranslatedString('LBL_NO_DATA').'")';
+				}
 			}
 		}
 		$smarty->assign('FLOWGRAPH', $graph);
