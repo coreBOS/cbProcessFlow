@@ -91,20 +91,25 @@ class pushAlongFlow_DetailViewBlock extends DeveloperBlock {
 			$smarty->assign('SHOW_GRAPH_AS', 'BUTTONS');
 			$graph = cbProcessFlow::getDestinationStatesButtons($processflow, $fromstate, $recid, $askifsure, $screenvalues);
 			if ($graph=='') {
-				$smarty->assign('ERROR_MESSAGE_CLASS', 'cb-alert-info');
-				$smarty->assign('ERROR_MESSAGE', getTranslatedString('LBL_NO_DATA'));
-				$smarty->assign('APMSG_DIVID', uniqid());
-				$graph = $smarty->fetch('applicationmessage.tpl');
+				if (isset($shownodata) && $shownodata === '0') {
+					$graph = '';
+				} else {
+					$smarty->assign('ERROR_MESSAGE_CLASS', 'cb-alert-info');
+					$smarty->assign('ERROR_MESSAGE', getTranslatedString('LBL_NO_DATA'));
+					$smarty->assign('APMSG_DIVID', uniqid());
+					$graph = $smarty->fetch('applicationmessage.tpl');
+				}
 			}
 		} else {
 			$smarty->assign('SHOW_GRAPH_AS', 'MERMAID');
 			$graph = cbProcessFlow::getDestinationStatesGraph($processflow, $fromstate, $recid, $askifsure, $screenvalues);
 			if ($graph=='') {
-				$graph = "graph LR\n".'A("'.getTranslatedString('LBL_NO_DATA').'")';
+				if (isset($shownodata) && $shownodata === '0') {
+					$graph = '';
+				} else {
+					$graph = "graph LR\n".'A("'.getTranslatedString('LBL_NO_DATA').'")';
+				}
 			}
-		}
-		if (isset($shownodata) && $shownodata === '0') {
-			$graph = '';
 		}
 		$smarty->assign('FLOWGRAPH', $graph);
 		$mod = Vtiger_Module::getInstance($module);
