@@ -99,12 +99,9 @@ class pushAlongFlow_DetailViewBlock extends DeveloperBlock {
 		} else {
 			$smarty->assign('SHOW_GRAPH_AS', 'MERMAID');
 			$graph = cbProcessFlow::getDestinationStatesGraph($processflow, $fromstate, $recid, $askifsure, $screenvalues);
-			if ($graph=='') {
+			if (!isset($shownodata) || $shownodata !== '0') {
 				$graph = "graph LR\n".'A("'.getTranslatedString('LBL_NO_DATA').'")';
 			}
-		}
-		if (isset($shownodata) && $shownodata === '0') {
-			$graph = '';
 		}
 		$smarty->assign('FLOWGRAPH', $graph);
 		$mod = Vtiger_Module::getInstance($module);
