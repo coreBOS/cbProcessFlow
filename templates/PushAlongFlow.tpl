@@ -23,7 +23,7 @@ window.processflowmoveto{$pflowid} = function (tostate, forrecord, askifsure, mi
 			{/if}
 		}
 	}
-	return false;
+	return void(0);
 }
 {if $SHOW_GRAPH_AS=='MERMAID'}
 mermaid.initialize({
