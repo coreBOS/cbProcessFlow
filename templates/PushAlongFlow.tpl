@@ -2,7 +2,7 @@
 {$FLOWGRAPH}
 </div>
 <script>
-window.processflowmoveto{$pflowid} = function (tostate, forrecord, askifsure, minfo) {
+window.processflowmoveto{$pflowid} = function (tostate, forrecord, askifsure, minfo, redirectto = '') {
 	if (askifsure) {
 		$ans = confirm(alert_arr.WANT_TO_CONTINUE);
 	} else {
@@ -10,7 +10,7 @@ window.processflowmoveto{$pflowid} = function (tostate, forrecord, askifsure, mi
 	}
 	if ($ans) {
 		if (minfo) {
-			let params='&minfo='+minfo+'&tostate='+tostate+'&fieldName={$fieldName}&bpmmodule={$module}&uitype={$uitype}&editmode={$isInEditMode}&pflowid={$pflowid}&bpmrecord='+forrecord;
+			let params='&minfo='+minfo+'&tostate='+tostate+'&fieldName={$fieldName}&bpmmodule={$module}&uitype={$uitype}&editmode={$isInEditMode}&pflowid={$pflowid}&bpmrecord='+forrecord+'&redirectto='+encodeURIComponent(redirectto);
 			window.open('index.php?action=cbProcessInfoAjax&file=bpmpopup&module=cbProcessInfo'+params, null, cbPopupWindowSettings + ',dependent=yes');
 		} else {
 			{if $isInEditMode}
@@ -24,6 +24,11 @@ window.processflowmoveto{$pflowid} = function (tostate, forrecord, askifsure, mi
 			}
 			document.getElementById('cbcustominfo2').value = '{$pflowid}';
 			dtlViewAjaxSave('{$fieldName}', '{$module}', '{$uitype}', '', '{$fieldName}', forrecord);
+			if (redirectto != '') {
+				setTimeout(function () {
+					window.location.href = redirectto;
+				}, 1000);
+			}
 			{/if}
 		}
 	}
