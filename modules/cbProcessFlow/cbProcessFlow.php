@@ -342,7 +342,7 @@ class cbProcessFlow extends CRMEntity {
 			} else {
 				$slds_class = $type;
 			}
-			$graph .= '<div class="slds-col slds-size_1-of-1 slds-p-around_xx-small"><a class="slds-button '.$slds_class.'" href="javascript:processflowmoveto'.$processflow."('$state', $record, $askifsure, $minfo)".'">'
+			$graph .= '<div class="slds-col slds-size_1-of-1 slds-m-around_x-small"><a class="slds-button '.$slds_class.'" href="javascript:processflowmoveto'.$processflow."('$state', $record, $askifsure, $minfo)".'">'
 				.getTranslatedString($link_label, $module).'</a></div>';
 			$minfo = next($moreinfo);
 		}
