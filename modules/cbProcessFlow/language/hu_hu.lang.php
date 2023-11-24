@@ -18,5 +18,6 @@ $mod_strings = array(
 	'LBL_DESCRIPTION_INFORMATION' => 'Description',
 
 	'ModuleFieldLabel' => 'ModuleFieldLabel Text',
+	'LBL_VALIDATION_PF' => 'A Kezdeti állapotok mező nem tartalmaz érvényes kiválasztási lista értéket az adott mezőhöz és modulhoz',
 );
 ?>

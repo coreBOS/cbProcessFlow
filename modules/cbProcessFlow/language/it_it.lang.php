@@ -24,5 +24,6 @@ $mod_strings = array(
 	'pffield' => 'Campo',
 	'active' => 'Attivo',
 	'pfinitialstates' => 'Stati Iniziali',
+	'LBL_VALIDATION_PF' => 'Il campo Stati iniziali non contiene un valore dell`elenco di selezione valido per il campo e il modulo specificati',
 );
 ?>

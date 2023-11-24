@@ -376,5 +376,19 @@ class cbProcessFlow extends CRMEntity {
 	 * You can override the behavior by re-defining it here.
 	 */
 	//public function get_dependents_list($id, $cur_tab_id, $rel_tab_id, $actions=false) { }
+
+	public function preSaveCheck($request) {
+		global $adb;
+		if ($this->mode == 'edit' && isset($request['fldName']) && ($request['fldName'] == 'pfinitialstates')) {
+			if (valueExistsInPicklist(urldecode($request['fieldValue']), $this->column_fields['pffield'], $this->column_fields['pfmodule']) == false) {
+				return array(true, getTranslatedString('LBL_VALIDATION_PF', 'cbProcessFlow'), '', '');
+			}
+		} elseif (array_key_exists('pfinitialstates', $request) && array_key_exists('pffield', $request) && array_key_exists('pfmodule', $request)) {
+			if (valueExistsInPicklist($request['pfinitialstates'], $request['pffield'], $request['pfmodule']) == false) {
+				return array(true, getTranslatedString('LBL_VALIDATION_PF', 'cbProcessFlow'), '', '');
+			}
+		}
+		return parent::preSaveCheck($request);
+	}
 }
 ?>
