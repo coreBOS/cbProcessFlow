@@ -18,5 +18,6 @@ $mod_strings = array(
 	'LBL_DESCRIPTION_INFORMATION' => 'Description',
 
 	'ModuleFieldLabel' => 'ModuleFieldLabel Text',
+	'LBL_VALIDATION_PF' => 'Le champ États initiaux ne contient pas de valeur de liste de sélection valide pour le champ et le module donnés.',
 );
 ?>

@@ -18,5 +18,6 @@ $mod_strings = array(
 	'LBL_DESCRIPTION_INFORMATION' => 'Descrição',
 
 	'ModuleFieldLabel' => 'Texto Etiqueta Campo Módulo',
+	'LBL_VALIDATION_PF' => 'O campo de estados iniciais não contém um valor de lista de opções válido para o campo e módulo especificados',
 );
 ?>

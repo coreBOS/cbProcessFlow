@@ -18,5 +18,6 @@ $mod_strings = array(
 	'LBL_DESCRIPTION_INFORMATION' => 'Description',
 
 	'ModuleFieldLabel' => 'ModuleFieldLabel Text',
+	'LBL_VALIDATION_PF' => 'Câmpul stări inițiale nu conține o valoare validă pentru lista de selectare pentru câmpul și modulul dat',
 );
 ?>

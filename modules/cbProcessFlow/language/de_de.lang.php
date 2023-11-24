@@ -18,5 +18,6 @@ $mod_strings = array(
 	'LBL_DESCRIPTION_INFORMATION' => 'Beschreibung',
 
 	'ModuleFieldLabel' => 'ModuleFieldLabel Text',
+	'LBL_VALIDATION_PF' => 'Das Feld Anfangsstatus enthält keinen gültigen Auswahllistenwert für das angegebene Feld und Modul',
 );
 ?>

@@ -18,5 +18,6 @@ $mod_strings = array(
 	'LBL_DESCRIPTION_INFORMATION' => 'Verkoopkans omschrijving',
 
 	'ModuleFieldLabel' => 'ModuleFieldLabel Text',
+	'LBL_VALIDATION_PF' => 'Het veld Initiële statussen bevat geen geldige keuzelijstwaarde voor het opgegeven veld en de opgegeven module',
 );
 ?>

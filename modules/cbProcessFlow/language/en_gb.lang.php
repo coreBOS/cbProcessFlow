@@ -24,5 +24,6 @@ $mod_strings = array(
 	'pffield' => 'Field',
 	'active' => 'Active',
 	'pfinitialstates' => 'Initial States',
+	'LBL_VALIDATION_PF' => 'Initial states field does not contains a valid picklist value for the given field and module',
 );
 ?>
